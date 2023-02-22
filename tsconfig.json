@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "AMD",
+        "target": "ES2019",
+        "moduleResolution": "Node",
+        "sourceMap": false,
+        "newLine": "LF",
+        "experimentalDecorators": true,
+        "noImplicitUseStrict": true,
+        "baseUrl": ".",
+        "lib": ["ES2019", "DOM"],
+        "paths": {
+            "N": ["node_modules/@hitc/netsuite-types/N"],
+            "N/*": ["node_modules/@hitc/netsuite-types/N/*"]
+        }
+    },
+    "exclude": ["node_modules"]
+}
