@@ -3,11 +3,13 @@
         <path>~/AccountConfiguration/*</path>
     </configuration>
     <files>
-        <path>~/FileCabinet/*</path>
+        <path>~/FileCabinet/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.ts</path>
+        <path>~/FileCabinet/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.js</path>
     </files>
-    <objects>
-        <path>~/Objects/*</path>
-    </objects>
+<!--    <objects>-->
+<!--        <path>~/Objects/customrecord_fpe_sftp_config.xml</path>-->
+<!--        <path>~/Objects/customscript_fpe_sch_autoinv_ftp.xml</path>-->
+<!--    </objects>-->
     <translationimports>
         <path>~/Translations/*</path>
     </translationimports>

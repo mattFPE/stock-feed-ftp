@@ -1,0 +1,14 @@
+<scheduledscript scriptid="custrecord_fpe_sftp_passguid">
+    <defaultfunction></defaultfunction>
+    <name>FPE Stock Feed Auto FTP</name>
+    <notifyowner>T</notifyowner>
+    <scriptfile>[/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.js]</scriptfile>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_fpe_sch_autoinv_ftp">
+            <isdeployed>T</isdeployed>
+            <loglevel>DEBUG</loglevel>
+            <status>NOTSCHEDULED</status>
+            <title>FPE Stock Feed Auto FTP</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</scheduledscript>
