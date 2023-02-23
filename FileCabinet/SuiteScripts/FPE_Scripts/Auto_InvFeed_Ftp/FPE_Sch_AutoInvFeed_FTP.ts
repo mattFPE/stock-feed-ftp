@@ -13,8 +13,8 @@ import * as query from 'N/query'
 import * as sftp from 'N/sftp'
 import * as log from 'N/log'
 import * as file from 'N/file'
-import * as record from 'N/record'
 import * as search from 'N/search'
+import * as runtime from 'N/runtime'
 
 interface QueryResult {
     itemid: string,
@@ -22,55 +22,66 @@ interface QueryResult {
 }
 
 interface ConfigData {
+    name: string
     custrecord_fpe_sftp_host: string
     custrecord_fpe_sftp_hostport: string
     custrecord_fpe_sftp_user: string
     custrecord_fpe_sftp_passguid: string
     custrecord_fpe_sftp_hostkey: string
+    custrecord_fpe_sftp_directory: string
 }
 
 export const execute: EntryPoints.Scheduled.execute = (scriptContext: EntryPoints.Scheduled.executeContext) => {
+    const sftpConfigIDs: string[] = (runtime.getCurrentScript().getParameter({ name: 'custscript_fpe_sftpconfid_ids'}) as string).split(',')
+    const csvFolder = runtime.getCurrentScript().getParameter({ name: 'custscript_fpe_csv_folder'}) as number
 
-    let csv = 'sku,qty\n'
+    if (sftpConfigIDs.length > 0 && csvFolder) {
+        try {
+            const creation = new Date().toDateString()
 
-    log.debug('CSV Initial', csv)
+            let csv = 'sku,qty\n'
 
-    const data: QueryResult[] = query.runSuiteQL({query: queryString}).asMappedResults<QueryResult>()
+            const data: QueryResult[] = query.runSuiteQL({query: queryString}).asMappedResults<QueryResult>()
+            log.audit('Auto FTP', 'Stock query completed')
 
-    log.debug('Query Results', data)
+            data.forEach(row => csv += `${row.itemid},${row.quantity}\n`)
+            log.audit('Auto FTP', 'CSV data generated')
 
-    data.forEach(row => csv += `${row.itemid},${row.quantity}\n`)
+            const csvFile = file.create({
+                fileType: file.Type.CSV,
+                name: `FpeStockFeed_${creation}.csv`,
+                folder: csvFolder,
+                contents: csv
+            })
 
-    log.debug('CSV', csv)
+            const csvFileID = csvFile.save()
+            log.audit('Auto FTP', 'CSV file created and saved')
 
-    const csvFile = file.create({
-        fileType: file.Type.CSV,
-        name: 'FpeStockFeed.csv',
-        folder: 237258,
-        contents: csv
-    })
+            sftpConfigIDs.forEach(config => {
+                let configData: ConfigData = search.lookupFields({
+                    type: 'customrecord_fpe_sftp_config',
+                    id: config,
+                    columns: [ 'name', 'custrecord_fpe_sftp_host', 'custrecord_fpe_sftp_hostport', 'custrecord_fpe_sftp_user', 'custrecord_fpe_sftp_passguid', 'custrecord_fpe_sftp_hostkey', 'custrecord_fpe_sftp_directory' ]
+                }) as ConfigData
+                log.audit('Auto FTP', 'sFTP Connection started')
 
-    const csvFileID = csvFile.save()
-    log.debug('CSV File ID', csvFileID)
+                let transfer = sftp.createConnection({
+                    url: configData.custrecord_fpe_sftp_host,
+                    port: parseInt(configData.custrecord_fpe_sftp_hostport),
+                    username: configData.custrecord_fpe_sftp_user,
+                    passwordGuid: configData.custrecord_fpe_sftp_passguid,
+                    hostKey: configData.custrecord_fpe_sftp_hostkey,
+                    directory: configData.custrecord_fpe_sftp_directory
+                })
+                log.audit('Auto FTP', 'sFTP Connected')
 
-    const configData: ConfigData = search.lookupFields({
-        type: 'customrecord_fpe_sftp_config',
-        id: 1,
-        columns: ['custrecord_fpe_sftp_host', 'custrecord_fpe_sftp_hostport', 'custrecord_fpe_sftp_user', 'custrecord_fpe_sftp_passguid', 'custrecord_fpe_sftp_hostkey']
-    }) as ConfigData
-
-    const transfer = sftp.createConnection({
-        url: configData.custrecord_fpe_sftp_host,
-        port: parseInt(configData.custrecord_fpe_sftp_hostport),
-        username: configData.custrecord_fpe_sftp_user,
-        passwordGuid: configData.custrecord_fpe_sftp_passguid,
-        hostKey: configData.custrecord_fpe_sftp_hostkey,
-    })
-
-    transfer.upload({
-        file: csvFile,
-        directory: './sftpuser'
-    })
+                transfer.upload({ file: csvFile })
+                log.audit('Auto FTP', 'File Succesfully transferred')
+            })
+        } catch (error) {
+            log.error('Auto FTP', `There was an error with the Auto FTP --- ${error}`)
+        }
+    }
 }
 
 const queryString =
