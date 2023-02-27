@@ -23,7 +23,7 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
                 log.audit('Auto FTP', 'CSV data generated');
                 const csvFile = file.create({
                     fileType: file.Type.CSV,
-                    name: `TEST_FILE_FpeStockFeed_${fileTimestamp}.csv`,
+                    name: `FpeStockFeed_${fileTimestamp}.csv`,
                     folder: csvFolder,
                     contents: csv
                 });

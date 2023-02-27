@@ -50,7 +50,7 @@ export const execute: EntryPoints.Scheduled.execute = (scriptContext: EntryPoint
 
             const csvFile = file.create({
                 fileType: file.Type.CSV,
-                name: `TEST_FILE_FpeStockFeed_${fileTimestamp}.csv`,
+                name: `FpeStockFeed_${fileTimestamp}.csv`,
                 folder: csvFolder,
                 contents: csv
             })

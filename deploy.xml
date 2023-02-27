@@ -5,12 +5,13 @@
     <files>
         <path>~/FileCabinet/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.ts</path>
         <path>~/FileCabinet/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.js</path>
-        <path>~/FileCabinet/SuiteScripts/FPE_Scripts/SFTP_Config/sftpTool.js</path>
+<!--        <path>~/FileCabinet/SuiteScripts/FPE_Scripts/SFTP_Config/sftpTool.js</path>-->
     </files>
-    <objects>
-        <path>~/Objects/customrecord_fpe_sftp_config.xml</path>
-        <path>~/Objects/customscript_fpe_sch_autoinv_ftp.xml</path>
-    </objects>
+<!--    <objects>-->
+<!--        <path>~/Objects/customrecord_fpe_sftp_config.xml</path>-->
+<!--        <path>~/Objects/customscript_fpe_sch_autoinv_ftp.xml</path>-->
+<!--        <path>~/Objects/customscript_fpe_sftp_tool.xml</path>-->
+<!--    </objects>-->
     <translationimports>
         <path>~/Translations/*</path>
     </translationimports>
