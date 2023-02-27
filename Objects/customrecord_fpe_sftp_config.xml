@@ -352,6 +352,32 @@
       <subtab></subtab>
     </customrecordcustomfield>
   </customrecordcustomfields>
+  <instances>
+    <instance scriptid="val_156061830_6854232_sb1_294">
+      <custrecord_fpe_sftp_directory>/sftpuser</custrecord_fpe_sftp_directory>
+      <custrecord_fpe_sftp_host>34.138.192.182</custrecord_fpe_sftp_host>
+      <custrecord_fpe_sftp_hostkey>34.138.192.182 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEKvE28BdAhKFdiUeMx67CF0xfN0PlwixagvBIpEomZM01bpsObFUk5jJRFPSzeZJUx+DUJ9OI1jtoQgqABV5MQ=</custrecord_fpe_sftp_hostkey>
+      <custrecord_fpe_sftp_hostport>22</custrecord_fpe_sftp_hostport>
+      <custrecord_fpe_sftp_passguid>03ba11c7f9a64d21a997866f33ae2ef2</custrecord_fpe_sftp_passguid>
+      <custrecord_fpe_sftp_secretkey></custrecord_fpe_sftp_secretkey>
+      <custrecord_fpe_sftp_sshkey></custrecord_fpe_sftp_sshkey>
+      <custrecord_fpe_sftp_user>sftpuser</custrecord_fpe_sftp_user>
+      <isinactive>F</isinactive>
+      <name>SFTP Test Machine</name>
+    </instance>
+    <instance scriptid="val_156061842_6854232_sb1_678">
+      <custrecord_fpe_sftp_directory>/</custrecord_fpe_sftp_directory>
+      <custrecord_fpe_sftp_host>vendors3.summitracing.com</custrecord_fpe_sftp_host>
+      <custrecord_fpe_sftp_hostkey>vendors3.summitracing.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAsubePAQOg/Vcbc/k61Ij88J95fEaOInp+7UCHZYRQXT/e3yvKyTQksSdpOshYgTRoHaAOkkqG1J3MR4ai9CpT34yIwVqXEqhl87pABUsWW06m/4HlRn+NhekbxM0D+skQSH+jYqgJyoeen9JPCDKKWRXxsE/1S1gI/19F4wBGfc=</custrecord_fpe_sftp_hostkey>
+      <custrecord_fpe_sftp_hostport>22</custrecord_fpe_sftp_hostport>
+      <custrecord_fpe_sftp_passguid>8f46fae20075422bbf1a1f5342afe024</custrecord_fpe_sftp_passguid>
+      <custrecord_fpe_sftp_secretkey></custrecord_fpe_sftp_secretkey>
+      <custrecord_fpe_sftp_sshkey></custrecord_fpe_sftp_sshkey>
+      <custrecord_fpe_sftp_user>fle</custrecord_fpe_sftp_user>
+      <isinactive>F</isinactive>
+      <name>Summit Racing</name>
+    </instance>
+  </instances>
   <subtabs>
     <subtab scriptid="tab_195_6854232_sb1_718">
       <tabparent></tabparent>

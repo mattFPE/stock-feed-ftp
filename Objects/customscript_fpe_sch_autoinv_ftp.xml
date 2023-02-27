@@ -1,14 +1,82 @@
-<scheduledscript scriptid="custrecord_fpe_sftp_passguid">
-    <defaultfunction></defaultfunction>
-    <name>FPE Stock Feed Auto FTP</name>
-    <notifyowner>T</notifyowner>
-    <scriptfile>[/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.js]</scriptfile>
-    <scriptdeployments>
-        <scriptdeployment scriptid="customdeploy_fpe_sch_autoinv_ftp">
-            <isdeployed>T</isdeployed>
-            <loglevel>DEBUG</loglevel>
-            <status>NOTSCHEDULED</status>
-            <title>FPE Stock Feed Auto FTP</title>
-        </scriptdeployment>
-    </scriptdeployments>
+<scheduledscript scriptid="customscript_fpe_sch_autoinv_ftp">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>FPE Stock Feed Auto FTP</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <scriptfile>[/SuiteScripts/FPE_Scripts/Auto_InvFeed_Ftp/FPE_Sch_AutoInvFeed_FTP.js]</scriptfile>
+  <scriptcustomfields>
+    <scriptcustomfield scriptid="custscript_fpe_sftpconfid_ids">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description></description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>TEXT</fieldtype>
+      <help></help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>SFTP Config IDs</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete></onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+    <scriptcustomfield scriptid="custscript_fpe_csv_folder">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description></description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>INTEGER</fieldtype>
+      <help></help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>CSV Folder</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete></onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+  </scriptcustomfields>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_fpe_sch_autoinv_ftp">
+      <custscript_fpe_csv_folder></custscript_fpe_csv_folder>
+      <custscript_fpe_sftpconfid_ids></custscript_fpe_sftpconfid_ids>
+      <isdeployed>T</isdeployed>
+      <loglevel>DEBUG</loglevel>
+      <status>NOTSCHEDULED</status>
+      <title>FPE Stock Feed Auto FTP</title>
+      <recurrence>
+        <single>
+          <repeat></repeat>
+          <startdate>2023-02-22</startdate>
+          <starttime>23:00:00Z</starttime>
+        </single>
+      </recurrence>
+    </scriptdeployment>
+  </scriptdeployments>
 </scheduledscript>
