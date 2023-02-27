@@ -15,6 +15,7 @@ import * as log from 'N/log'
 import * as file from 'N/file'
 import * as search from 'N/search'
 import * as runtime from 'N/runtime'
+import * as format from 'N/format'
 
 interface QueryResult {
     itemid: string,
@@ -37,7 +38,7 @@ export const execute: EntryPoints.Scheduled.execute = (scriptContext: EntryPoint
 
     if (sftpConfigIDs.length > 0 && csvFolder) {
         try {
-            const creation = new Date().toDateString()
+            const fileTimestamp = format.format({value: new Date(), type: format.Type.DATETIME}).replaceAll('/', '').replaceAll(' ', '_').replaceAll(':', '')
 
             let csv = 'sku,qty\n'
 
@@ -49,7 +50,7 @@ export const execute: EntryPoints.Scheduled.execute = (scriptContext: EntryPoint
 
             const csvFile = file.create({
                 fileType: file.Type.CSV,
-                name: `FpeStockFeed_${creation}.csv`,
+                name: `TEST_FILE_FpeStockFeed_${fileTimestamp}.csv`,
                 folder: csvFolder,
                 contents: csv
             })
@@ -65,18 +66,22 @@ export const execute: EntryPoints.Scheduled.execute = (scriptContext: EntryPoint
                 }) as ConfigData
                 log.audit('Auto FTP', 'sFTP Connection started')
 
-                let transfer = sftp.createConnection({
-                    url: configData.custrecord_fpe_sftp_host,
-                    port: parseInt(configData.custrecord_fpe_sftp_hostport),
-                    username: configData.custrecord_fpe_sftp_user,
-                    passwordGuid: configData.custrecord_fpe_sftp_passguid,
-                    hostKey: configData.custrecord_fpe_sftp_hostkey,
-                    directory: configData.custrecord_fpe_sftp_directory
-                })
-                log.audit('Auto FTP', 'sFTP Connected')
+                try {
+                    let transfer = sftp.createConnection({
+                        url: configData.custrecord_fpe_sftp_host,
+                        port: parseInt(configData.custrecord_fpe_sftp_hostport),
+                        username: configData.custrecord_fpe_sftp_user,
+                        passwordGuid: configData.custrecord_fpe_sftp_passguid,
+                        hostKey: configData.custrecord_fpe_sftp_hostkey,
+                        directory: configData.custrecord_fpe_sftp_directory
+                    })
+                    log.audit('Auto FTP', 'sFTP Connected')
 
-                transfer.upload({ file: csvFile })
-                log.audit('Auto FTP', 'File Succesfully transferred')
+                    transfer.upload({ file: csvFile })
+                    log.audit('Auto FTP', 'File Succesfully transferred')
+                } catch (connectError) {
+                    log.error('Auto FTP Connection', `There was an error with the FTP connection --- ${connectError}`)
+                }
             })
         } catch (error) {
             log.error('Auto FTP', `There was an error with the Auto FTP --- ${error}`)

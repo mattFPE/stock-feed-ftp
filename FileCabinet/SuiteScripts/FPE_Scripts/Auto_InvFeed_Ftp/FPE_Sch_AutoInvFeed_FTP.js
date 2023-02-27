@@ -7,7 +7,7 @@
  * @NApiVersion 2.1
  * @NScriptType ScheduledScript
  */
-define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search", "N/runtime"], function (require, exports, query, sftp, log, file, search, runtime) {
+define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search", "N/runtime", "N/format"], function (require, exports, query, sftp, log, file, search, runtime, format) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.execute = void 0;
     const execute = (scriptContext) => {
@@ -15,7 +15,7 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
         const csvFolder = runtime.getCurrentScript().getParameter({ name: 'custscript_fpe_csv_folder' });
         if (sftpConfigIDs.length > 0 && csvFolder) {
             try {
-                const creation = new Date().toDateString();
+                const fileTimestamp = format.format({ value: new Date(), type: format.Type.DATETIME }).replaceAll('/', '').replaceAll(' ', '_').replaceAll(':', '');
                 let csv = 'sku,qty\n';
                 const data = query.runSuiteQL({ query: queryString }).asMappedResults();
                 log.audit('Auto FTP', 'Stock query completed');
@@ -23,7 +23,7 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
                 log.audit('Auto FTP', 'CSV data generated');
                 const csvFile = file.create({
                     fileType: file.Type.CSV,
-                    name: `FpeStockFeed_${creation}.csv`,
+                    name: `TEST_FILE_FpeStockFeed_${fileTimestamp}.csv`,
                     folder: csvFolder,
                     contents: csv
                 });
@@ -36,17 +36,22 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
                         columns: ['name', 'custrecord_fpe_sftp_host', 'custrecord_fpe_sftp_hostport', 'custrecord_fpe_sftp_user', 'custrecord_fpe_sftp_passguid', 'custrecord_fpe_sftp_hostkey', 'custrecord_fpe_sftp_directory']
                     });
                     log.audit('Auto FTP', 'sFTP Connection started');
-                    let transfer = sftp.createConnection({
-                        url: configData.custrecord_fpe_sftp_host,
-                        port: parseInt(configData.custrecord_fpe_sftp_hostport),
-                        username: configData.custrecord_fpe_sftp_user,
-                        passwordGuid: configData.custrecord_fpe_sftp_passguid,
-                        hostKey: configData.custrecord_fpe_sftp_hostkey,
-                        directory: configData.custrecord_fpe_sftp_directory
-                    });
-                    log.audit('Auto FTP', 'sFTP Connected');
-                    transfer.upload({ file: csvFile });
-                    log.audit('Auto FTP', 'File Succesfully transferred');
+                    try {
+                        let transfer = sftp.createConnection({
+                            url: configData.custrecord_fpe_sftp_host,
+                            port: parseInt(configData.custrecord_fpe_sftp_hostport),
+                            username: configData.custrecord_fpe_sftp_user,
+                            passwordGuid: configData.custrecord_fpe_sftp_passguid,
+                            hostKey: configData.custrecord_fpe_sftp_hostkey,
+                            directory: configData.custrecord_fpe_sftp_directory
+                        });
+                        log.audit('Auto FTP', 'sFTP Connected');
+                        transfer.upload({ file: csvFile });
+                        log.audit('Auto FTP', 'File Succesfully transferred');
+                    }
+                    catch (connectError) {
+                        log.error('Auto FTP Connection', `There was an error with the FTP connection --- ${connectError}`);
+                    }
                 });
             }
             catch (error) {
