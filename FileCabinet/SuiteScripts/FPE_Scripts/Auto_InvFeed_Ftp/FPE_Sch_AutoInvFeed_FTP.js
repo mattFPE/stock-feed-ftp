@@ -18,10 +18,11 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
             const emailAuthorID = parseInt(currentScript.getParameter({ name: 'custscript_fpe_emailftp_author' }));
             const csvFolder = currentScript.getParameter({ name: 'custscript_fpe_csv_folder' });
             const fileTimestamp = format.format({ value: new Date(), type: format.Type.DATETIME }).replaceAll('/', '').replaceAll(' ', '_').replaceAll(':', '');
-            let csv = 'sku,qty\n';
+            const columnTimestamp = format.format({ value: new Date(), type: format.Type.DATE });
+            let csv = 'sku,qty,date\n';
             const data = query.runSuiteQL({ query: queryString }).asMappedResults();
             log.audit('Auto FTP', 'Stock query completed');
-            data.forEach(row => csv += `${row.itemid},${row.quantity}\n`);
+            data.forEach(row => csv += `${row.itemid},${row.quantity},${columnTimestamp}\n`);
             log.audit('Auto FTP', 'CSV data generated');
             const csvFile = file.create({
                 fileType: file.Type.CSV,
@@ -91,8 +92,8 @@ define(["require", "exports", "N/query", "N/sftp", "N/log", "N/file", "N/search"
         
             WHEN ( Item.custitem_fpe_usecount = 'T' AND Item.custitem_fpe_usemanual = 'F' AND Item.custitem_fpe_usebuildable = 'T' ) THEN
                 CASE
-                    WHEN ( aggregateItemLocation.quantityOnHand = 0 OR  aggregateItemLocation.quantityOnHand IS NULL AND Item.custitem_sg_actual_available_to_build > Item.custitem_fpe_buildablemaximum ) THEN Item.custitem_fpe_buildablemaximum
-                    WHEN ( aggregateItemLocation.quantityOnHand = 0 OR  aggregateItemLocation.quantityOnHand IS NULL AND Item.custitem_sg_actual_available_to_build IS NULL ) THEN 0
+                    WHEN ( (aggregateItemLocation.quantityOnHand = 0 OR  aggregateItemLocation.quantityOnHand IS NULL) AND (Item.custitem_fpe_buildablemaximum IS NOT NULL AND Item.custitem_sg_actual_available_to_build > Item.custitem_fpe_buildablemaximum) ) THEN Item.custitem_fpe_buildablemaximum
+                    WHEN ( (aggregateItemLocation.quantityOnHand = 0 OR  aggregateItemLocation.quantityOnHand IS NULL) AND Item.custitem_sg_actual_available_to_build IS NULL ) THEN 0
                     WHEN ( aggregateItemLocation.quantityOnHand = 0 OR  aggregateItemLocation.quantityOnHand is NULL ) THEN Item.custitem_sg_actual_available_to_build
                     ELSE aggregateItemLocation.quantityOnHand
                 END
